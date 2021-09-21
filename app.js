@@ -35,6 +35,7 @@ application.get('/', (req, res) => {
     res.render('index');
 });
 
+//Pajungiame controllers/irasai.js faila adresui /irasai
 application.use('/irasai', irasaicontroller)
 
 //Ijungiame aplikacija ja paleidziant 3000 porte

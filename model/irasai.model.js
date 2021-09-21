@@ -2,9 +2,6 @@ const mongoose = require('mongoose');
 
 var IrasuSchema = new mongoose.Schema({
 
-    irasoId : {
-        type: String
-    },
     pavadinimas : {
         type: String
     },
