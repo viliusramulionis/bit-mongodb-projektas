@@ -4,7 +4,7 @@ const express = require('express');
 
 
 //Prisijungiame prie duomenu bazes
-mongoose.connect('mongodb://localhost:27017/blogas', (error) => {
+mongoose.connect('mongodb://localhost:27017/blogas', { ignoreUndefined: true }, (error) => {
 
     if(!error) {
 

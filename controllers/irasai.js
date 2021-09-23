@@ -44,13 +44,16 @@ router.get('/pridejimas', (req, res) => {
 
 router.post('/edit_submit', (req, res) => {
 
-    irasaimodel.updateOne({_id: req.body.id}, {
+    irasaimodel.findByIdAndUpdate(req.body.id, {
         pavadinimas: req.body.pavadinimas,
         turinys: req.body.turinys,
         data: req.body.data
+    })
+    .then(data => {
+        console.log(data);
+        res.redirect('/irasai');
     });
 
-    res.redirect('/irasai');
 });
 
 router.get('/edit/:id', (req, res) => {
@@ -87,12 +90,19 @@ router.post('/submit', (req, res) => {
     res.redirect('/irasai');
 });
 
-router.get('/paieska/:s', (req, res) => {
-    const s = req.params.s;
-
-    irasaimodel.find( {$pavadinimas: { $regex: s}}, (erroras, informacija) => {
+router.post('/paieska', (req, res) => {
+    const s = req.body.s;
+   
+    irasaimodel.find( {$text: { $search: s}}, (erroras, informacija) => {
         if(!erroras) {
-            res.json(informacija);
+            
+            informacija.forEach(function(item) {
+                var data = new Date(item.data);
+                item.data = data.toLocaleDateString('lt-LT');
+                item._id = item._id.toString();
+            });
+
+            res.render('paieska', {s: s, data: informacija});
         } else {
             console.log(erroras);
             res.send('Ivyko klaida');
