@@ -38,8 +38,33 @@ router.get('/', (req, res) => {
     
 });
 
+router.get('/rusiavimas/desc', (req, res) => {
+    irasaimodel.find( (erroras, informacija) => {
+        if(!erroras) {
+            informacija.forEach(function(item) {
+                var data = new Date(item.data);
+                item.data = data.toLocaleDateString('lt-LT');
+                item._id = item._id.toString();
+            });
+
+            res.render('list', {data: informacija});
+
+        } else {
+            res.send('Ivyko klaida');
+        }
+    })
+    .collation({locale: "lt" })
+    .sort({pavadinimas : -1})
+    .lean();
+});
+
 router.get('/pridejimas', (req, res) => {
-    res.render('add');
+
+    var date = new Date();
+    date = date.toLocaleDateString('lt-LT');
+
+    res.render('add', {data: date});
+    
 });
 
 router.post('/edit_submit', (req, res) => {
@@ -111,7 +136,7 @@ router.post('/paieska', (req, res) => {
     //Pakeiciame modelio kalbos atpazinima i lietuviska
     .collation({locale: "lt" })
     //isrusiuojame gauta informacija zemejimo tvarka (jeigu norime atvirksciai rasome -1)
-    .sort({pavadinimas : 1})
+    .sort({pavadinimas : -1})
     //grazina apdorota informacijos paketa 
     //https://mongoosejs.com/docs/tutorials/lean.html
     .lean();
